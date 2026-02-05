@@ -23,7 +23,10 @@
 
   home.sessionVariables = {
     EDITOR = "emacs";
-    VISUAL = "emacs -nw";
+  };
+
+  programs.bash.shellAliases = {
+    editor = "emacs -nw";
   };
 
   programs.git = {
