@@ -21,6 +21,9 @@
     shell = pkgs.bashInteractive;
   };
 
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+
   environment.systemPackages = with pkgs; [
     emacs
     wget

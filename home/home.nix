@@ -15,11 +15,11 @@
 
   programs.bash = {
     enable = true;
-    bashrcExtra = '';
+    bashrcExtra = ''
       export HISTCONTROL=ignoredups
       export HISTSIZE=10000
       export EDITOR=emacs
-      '';
+    '';
   };
 
   programs.git = {
