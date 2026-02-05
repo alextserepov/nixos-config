@@ -33,6 +33,9 @@
     enable = true;
     userName = "Aleksandr Tserepov-Savolainen";
     userEmail = "aleksandr.tserepov-savolainen@unikie.com";
+    extraConfig = {
+     core.editor = "emacs -nw";
+    };
   };
 
   programs.emacs = {
