@@ -3,6 +3,11 @@
 {
   home.username = "alextserepov";
   home.homeDirectory = "/home/alextserepov";
+
+  imports = [
+    ./hyprland
+  ];
+
   home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
@@ -53,4 +58,5 @@
   programs.direnv.nix-direnv.enable = true;
 
   programs.home-manager.enable = true;
+
 }

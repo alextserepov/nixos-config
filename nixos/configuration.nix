@@ -20,11 +20,20 @@
   services.xserver.libinput = {
     enable = true;
     mouse.accelProfile = "flat";
-    touchpad.naturalScrolling = true;
+    touchpad.naturalScrolling = false;
   };
   services.fwupd.enable = true;
 
   networking.networkmanager.enable = true;
+
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
+  services.blueman.enable = true;
+
+
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
+  '';
 
   programs.git.enable = true;
   users.users.alextserepov = {
@@ -40,11 +49,10 @@
     htop
     pciutils
     usbutils
+    wl-clipboard
+    grim
+    slurp
   ];
-
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
 
   services.keyd = {
     enable = true;
@@ -57,4 +65,19 @@
       };
     };
   };
+
+  programs.hyprland.enable = true;
+  
+  services.displayManager.gdm.enable = true;
+  services.displayManager.gdm.wayland = true;
+  
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+
+  fonts.packages = with pkgs; [
+    jetbrains-mono
+    noto-fonts
+    noto-fonts-color-emoji
+  ];
+
 }
