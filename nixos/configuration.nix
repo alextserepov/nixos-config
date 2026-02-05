@@ -30,6 +30,21 @@
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
 
+  hardware.bluetooth.settings = {
+    General = {
+      FastConnectable = true;
+      ReconnectAttempts = 7;
+      ReconnectIntervals = "1,2,3";
+    };
+  };
+
+  services.libinput.enable = true;
+  services.libinput.touchpad = {
+    naturalScrolling = true;
+    tapping = true;
+    clickMethod = "clickfinger";
+    disableWhileTyping = true;
+  };
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"

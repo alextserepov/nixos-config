@@ -16,6 +16,7 @@
     jq
     tree
     google-chrome
+    gcr
   ];
 
   programs.bash = {
@@ -28,6 +29,7 @@
 
   home.sessionVariables = {
     EDITOR = "emacs";
+    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
   };
 
   programs.bash.shellAliases = {
@@ -58,5 +60,7 @@
   programs.direnv.nix-direnv.enable = true;
 
   programs.home-manager.enable = true;
+
+  services.gnome-keyring.enable = true;
 
 }
