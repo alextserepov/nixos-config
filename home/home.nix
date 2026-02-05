@@ -18,8 +18,12 @@
     bashrcExtra = ''
       export HISTCONTROL=ignoredups
       export HISTSIZE=10000
-      export EDITOR=emacs
     '';
+  };
+
+  home.sessionVariables = {
+    EDITOR = "emacs";
+    VISUAL = "emacs -nw";
   };
 
   programs.git = {
