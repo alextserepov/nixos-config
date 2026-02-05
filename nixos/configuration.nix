@@ -12,6 +12,18 @@
   time.timeZone = "Europe/Helsinki";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  # Carbon X1 Settings
+  services.power-profiles-daemon.enable = true;
+  hardware.cpu.intel.updateMicrocode = true;
+  services.logind.lidSwitch = "suspend";
+  services.logind.lidSwitchExternalPower = "lock";
+  services.xserver.libinput = {
+    enable = true;
+    mouse.accelProfile = "flat";
+    touchpad.naturalScrolling = true;
+  };
+  services.fwupd.enable = true;
+
   networking.networkmanager.enable = true;
 
   programs.git.enable = true;
@@ -20,9 +32,6 @@
     extraGroups = [ "wheel" "networkmanager" ];
     shell = pkgs.bashInteractive;
   };
-
-  programs.direnv.enable = true;
-  programs.direnv.nix-direnv.enable = true;
 
   environment.systemPackages = with pkgs; [
     emacs
