@@ -2,7 +2,6 @@
 
 {
   wayland.windowManager.hyprland.settings = {
-    "$mod" = "SUPER";
 
     exec-once = [
       "waybar"

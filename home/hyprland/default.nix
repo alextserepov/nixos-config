@@ -6,12 +6,16 @@
     waybar
     wofi
     mako
+    grim
+    slurp
+    wl-clipboard
   ];
 
   wayland.windowManager.hyprland.enable = true;
 
   imports = [
     ./settings.nix
+    ./keybindings.nix
   ];
 
   programs.waybar.enable = true;

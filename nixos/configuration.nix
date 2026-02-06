@@ -15,13 +15,13 @@
   # Carbon X1 Settings
   services.power-profiles-daemon.enable = true;
   hardware.cpu.intel.updateMicrocode = true;
-  services.logind.lidSwitch = "suspend";
-  services.logind.lidSwitchExternalPower = "lock";
-  services.xserver.libinput = {
-    enable = true;
-    mouse.accelProfile = "flat";
-    touchpad.naturalScrolling = false;
+  services.logind.settings = {
+    Login = {
+      HandleLidSwitch = "suspend";
+      HandleLidSwitchExternalPower = "ignore";
+    };
   };
+
   services.fwupd.enable = true;
 
   networking.networkmanager.enable = true;

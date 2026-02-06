@@ -38,8 +38,12 @@
 
   programs.git = {
     enable = true;
-    userName = "Aleksandr Tserepov-Savolainen";
-    userEmail = "aleksandr.tserepov-savolainen@unikie.com";
+    settings = {
+      User = {
+        name = "Aleksandr Tserepov-Savolainen";
+	email = "aleksandr.tserepov-savolainen@unikie.com";
+      };
+    };
     extraConfig = {
      core.editor = "emacs -nw";
     };
