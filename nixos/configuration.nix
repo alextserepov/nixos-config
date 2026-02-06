@@ -68,6 +68,7 @@
     wl-clipboard
     grim
     slurp
+    hyprlock
   ];
 
   services.keyd = {

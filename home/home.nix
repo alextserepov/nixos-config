@@ -23,6 +23,8 @@
     tree
     google-chrome
     gcr
+    slack
+    hcloud
   ];
 
   programs.bash = {
