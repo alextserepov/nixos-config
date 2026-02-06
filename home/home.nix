@@ -10,6 +10,12 @@
 
   home.stateVersion = "25.11";
 
+  wayland.windowManager.hyprland.settings.monitor = [
+    "DP-5,1920x1080@60,0x0,1"
+    "eDP-1,preferred,1920x0,1"
+  ];
+
+
   home.packages = with pkgs; [
     ripgrep
     fd

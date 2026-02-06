@@ -16,6 +16,7 @@
   imports = [
     ./settings.nix
     ./keybindings.nix
+    ./waybar.nix
   ];
 
   programs.waybar.enable = true;
