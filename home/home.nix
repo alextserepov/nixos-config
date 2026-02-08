@@ -65,7 +65,11 @@
       eglot
       company
       flycheck
+      nix-mode
     ];
+    extraConfig = ''
+      (load-theme 'wheatgrass t)
+    '';
   };
   
   programs.direnv.enable = true;
