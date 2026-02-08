@@ -3,7 +3,7 @@
     "$mod" = "Mod4"; # your wev said Mod4 for both Win + Command
 
     bind = [
-      "$mod,L,exec,hyprlock"
+      "$mod SHIFT,L,exec,hyprlock"
       # --- launchers ---
       "$mod,Return,exec,kitty"
       "$mod,D,exec,wofi --show drun"

@@ -21,7 +21,8 @@
 
   # Helpful for builders:
   nix.settings = {
-    max-jobs = "auto";
+    "max-jobs" = "auto";
     cores = 0; # use all
   };
+  system.stateVersion = "25.11";
 }

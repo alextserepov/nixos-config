@@ -18,7 +18,7 @@
 
         clock = {
           format = "{:%a %d.%m  %H:%M}";
-	  tootip-format = "{:%A %d %B %Y\n%H:%M:%S}";
+	  tooltip-format = "{:%A %d %B %Y\n%H:%M:%S}";
 	  on-click = "gnome-calendar";
 	  on-click-right = "kitty -e cal -3";
         };

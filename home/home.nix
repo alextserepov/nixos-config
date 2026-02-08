@@ -28,6 +28,8 @@
     polkit_gnome
     pavucontrol
     gnome-calendar
+    wlogout
+    networkmanagerapplet
   ];
 
   programs.bash = {
