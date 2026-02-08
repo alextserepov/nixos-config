@@ -25,6 +25,7 @@
     gcr
     slack
     hcloud
+    polkit_gnome
   ];
 
   programs.bash = {
@@ -37,7 +38,6 @@
 
   home.sessionVariables = {
     EDITOR = "emacs";
-    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
   };
 
   programs.bash.shellAliases = {
@@ -71,6 +71,24 @@
 
   programs.home-manager.enable = true;
 
-  services.gnome-keyring.enable = true;
+  services.gnome-keyring = {
+    enable = true;
+    components = [ "secrets" "ssh" "pkcs11" ];
+  };
+
+  systemd.user.services.polkit-gnome-agent = {
+    Unit = {
+      Description = "Polkit GNOME Authentication Agent";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
 
 }

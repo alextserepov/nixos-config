@@ -13,7 +13,7 @@
   time.timeZone = "Europe/Helsinki";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  #j Carb                                                                    on X1 Settings
+  # Carbon X1 Settings
   services.power-profiles-daemon.enable = true;
   hardware.cpu.intel.updateMicrocode = true;
   services.logind.settings = {
@@ -96,11 +96,5 @@
     noto-fonts
     noto-fonts-color-emoji
   ];
-
-  security.polkit.enable = true;
-  services.gnome.gnome-keyring.enable = true;
-  security.pam.services.gdm.enableGnomeKeyring = true;
-  security.pam.services.gdm-password.enableGnomeKeyring = true;
-  security.pam.services.login.enableGnomeKeyring = true;
 
 }
