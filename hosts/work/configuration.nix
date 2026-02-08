@@ -114,5 +114,26 @@
   nix.extraOptions = ''
     builders-use-substitutes = true
   '';
+
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
+
+  # Force the Intel SOF card to use the "Speaker" HiFi profile by default
+  environment.etc."wireplumber/main.lua.d/70-default-speaker-profile.lua".text = ''
+    rule = {
+      matches = {
+        {
+          { "device.name", "matches", "alsa_card.pci-0000_00_1f.3-platform-skl_hda_dsp_generic" },
+        },
+      },
+      apply_properties = {
+        ["device.profile"] = "HiFi (HDMI1, HDMI2, HDMI3, Mic1, Mic2, Speaker)",
+      },
+    }
+  '';
   
 }
