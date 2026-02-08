@@ -20,11 +20,6 @@
       blur.enabled = true;
     };
 
-    bind = [
-      "$mod,Return,exec,kitty"
-      "$mod,D,exec,wofi --show drun"
-    ];
-
     input = {
       kb_layout = "fi";
       kb_variant = "nodeadkeys";

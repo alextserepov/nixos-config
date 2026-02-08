@@ -26,6 +26,8 @@
     slack
     hcloud
     polkit_gnome
+    pavucontrol
+    gnome-calendar
   ];
 
   programs.bash = {

@@ -18,6 +18,45 @@
 
         clock = {
           format = "{:%a %d.%m  %H:%M}";
+	  tootip-format = "{:%A %d %B %Y\n%H:%M:%S}";
+	  on-click = "gnome-calendar";
+	  on-click-right = "kitty -e cal -3";
+        };
+
+        network = {
+          format-wifi = " {signalStrength}%";
+          format-ethernet = "󰈁 {ifname}";
+          format-disconnected = "󰖪";
+          tooltip = true;
+          on-click = "kitty -e nmtui";
+          on-click-right = "nm-connection-editor";
+        };
+
+        bluetooth = {
+          format = "";
+          format-connected = " {num_connections}";
+          tooltip = true;
+          on-click = "blueman-manager";
+        };
+
+        pulseaudio = {
+          format = "{icon} {volume}%";
+          format-muted = "󰝟 muted";
+          format-icons = {
+            default = [ "󰕿" "󰖀" "󰕾" ];
+          };
+          scroll-step = 5;
+          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          on-click-right = "pavucontrol";
+        };
+
+        battery = {
+          format = "{icon} {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-plugged = "󰂄 {capacity}%";
+          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+          tooltip = true;
+          on-click = "kitty -e upower -i $(upower -e | grep BAT)";
         };
 
         "hyprland/workspaces" = {
@@ -38,6 +77,7 @@
         font-family: "JetBrains Mono";
         font-size: 12px;
         min-height: 0;
+	color: rgba(255, 255, 255, 0.92);
       }
 
       window#waybar {
