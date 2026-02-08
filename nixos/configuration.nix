@@ -55,7 +55,6 @@
   users.users.alextserepov = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
-    shell = pkgs.bashInteractive;
   };
 
   environment.systemPackages = with pkgs; [

@@ -55,7 +55,6 @@
   users.users.alextserepov = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
-    shell = pkgs.bashInteractive;
   };
 
   environment.systemPackages = with pkgs; [
@@ -97,4 +96,23 @@
     noto-fonts-color-emoji
   ];
 
+
+  nix.distributedBuilds = true;
+
+  nix.buildMachines = [
+    {
+      hostName = "hetz.ppclabz.net";
+      system = "x86_64-linux";
+      protocol = "ssh-ng";
+      sshUser = "alextserepov";
+      maxJobs = 4;          # tune per machine
+      speedFactor = 2;
+      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" ];
+    }
+  ];
+
+  nix.extraOptions = ''
+    builders-use-substitutes = true
+  '';
+  
 }
