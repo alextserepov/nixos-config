@@ -68,6 +68,8 @@
     grim
     slurp
     hyprlock
+    yubikey-manager
+    pcsc-tools
   ];
 
   services.keyd = {
@@ -135,5 +137,8 @@
       },
     }
   '';
+
+  # Yubikey stuff
+  services.pcscd.enable = true;
   
 }

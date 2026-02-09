@@ -33,5 +33,8 @@
     git
     curl
     wget
+    age
+    sops
+    age-plugin-yubikey
   ];
 }
