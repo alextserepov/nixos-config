@@ -2,7 +2,6 @@
 
 {
   wayland.windowManager.hyprland.settings = {
-
     exec-once = [
       "waybar"
       "mako"
@@ -23,11 +22,15 @@
     input = {
       kb_layout = "fi";
       kb_variant = "nodeadkeys";
+
+      repeat_delay = 500;
+      repeat_rate = 18;
+
       touchpad = {
         natural_scroll = true;
-	scroll_factor = 0.35;
-	disable_while_typing = true;
-	tap-to-click = true;
+        scroll_factor = 0.35;
+        disable_while_typing = true;
+        tap-to-click = true;
       };
     };
   };

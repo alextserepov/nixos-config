@@ -70,18 +70,6 @@
     hyprlock
   ];
 
-  services.keyd = {
-    enable = true;
-    keyboards.default = {
-      ids = [ "*" ];
-      settings = {
-        main = {
-	  ejectcd = "delete";
-	};
-      };
-    };
-  };
-
   programs.hyprland.enable = true;
   
   services.displayManager.gdm.enable = true;
