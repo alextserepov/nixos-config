@@ -21,6 +21,21 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1771171797,
+        "narHash": "sha256-ngIarpog/Hv5r9M1YyvsaaSUBCqtWqHl6pibq6n2ppo=",
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "rev": "531af1dbaee7cfdd7aed1e595ce418b7e2e99a80",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1770136044,
@@ -37,10 +52,28 @@
         "type": "github"
       }
     },
+    "pkcs11-proxy": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763403862,
+        "narHash": "sha256-xX3fdX3g+U+gdOark3vNv+/QDDHyXSc6kwhq7VWNUpo=",
+        "owner": "tiiuae",
+        "repo": "pkcs11-proxy",
+        "rev": "199f00f0874b8c0bdc34a90203171a11a791be7f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tiiuae",
+        "repo": "pkcs11-proxy",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixos-hardware": "nixos-hardware",
+        "nixpkgs": "nixpkgs",
+        "pkcs11-proxy": "pkcs11-proxy"
       }
     }
   },
