@@ -44,6 +44,8 @@
   services.pcscd.enable = true;
   services.pcscd.plugins = [ pkgs.ccid ];
 
+  boot.blacklistedKernelModules = [ "dw-hdmi" ];
+
   networking.firewall.allowedTCPPorts = [ 2345 ];
 
   systemd.tmpfiles.rules = [

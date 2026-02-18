@@ -134,8 +134,12 @@
     builders-use-substitutes = true
   '';
 
-  programs.ssh.knownHosts."arm-builder.ppclabz.net".publicKey =
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIgCtqxegO4ZZrvATJULyGkjdX0QQJmXFFoc27bCe4Xg";
+  programs.ssh.extraConfig = ''
+    Host arm-builder.ppclabz.net
+      UserKnownHostsFile /etc/ssh/ssh_known_hosts.d/arm-builder
+      StrictHostKeyChecking accept-new
+  '';
+
 
   services.pipewire = {
     enable = true;
