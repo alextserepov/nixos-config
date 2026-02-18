@@ -16,6 +16,7 @@
     extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBOQxe0N4f5NcLYVyUrhh7jw+SqS1HxcrFDdZ1BLukgU aleksandr.tserepov-savolainen@unikie.com"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMvERyCMpHvGpYCl+stqSF/8ITe/Nmr+mRPjAanwz5Up root@nixos"
     ];
   };
 

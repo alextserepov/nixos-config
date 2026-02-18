@@ -136,8 +136,10 @@
 
   programs.ssh.extraConfig = ''
     Host arm-builder.ppclabz.net
+      User alextserepov
+      IdentityFile /etc/nix/ssh/arm-builder
       UserKnownHostsFile /etc/ssh/ssh_known_hosts.d/arm-builder
-      StrictHostKeyChecking accept-new
+      StrictHostKeyChecking no
   '';
 
 
