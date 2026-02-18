@@ -78,6 +78,7 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./hosts/arm-builder/disko.nix
+            ./hosts/arm-builder/hardware-configuration.nix
             ./modules/nixos/base.nix
             ./hosts/arm-builder/configuration.nix
             { nixpkgs.config.allowUnfree = true; }
