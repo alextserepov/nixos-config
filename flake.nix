@@ -54,10 +54,18 @@
 
             src = inputs.pkcs11-proxy;
 
-            nativeBuildInputs = with prev; [ cmake pkg-config ];
-            buildInputs = with prev; [ openssl ];
+            nativeBuildInputs = with prev; [ cmake pkg-config bash coreutils ];
+            buildInputs = with prev; [ openssl libseccomp ];
 
             cmakeFlags = [];
+
+            postPatch = ''
+              chmod +x mksyscalls.sh
+              substituteInPlace mksyscalls.sh \
+                --replace "/usr/bin/env bash" "${prev.bash}/bin/bash" \
+                --replace "/usr/bin/env sh" "${prev.bash}/bin/bash"
+              patchShebangs mksyscalls.sh
+            '';
 
             doCheck = false;
 
