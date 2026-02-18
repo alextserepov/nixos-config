@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  powerManagement.enable = true;
+  
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
 
@@ -48,8 +50,14 @@
   };
 
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
+    # Disable USB autosuspend for Logitech Bolt receiver (046d:c548)
+    ACTION=="add|change", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c548", TEST=="power/control", ATTR{power/control}="on"
   '';
+
+
+#  services.udev.extraRules = ''
+#    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
+#  '';
 
   programs.git.enable = true;
   users.users.alextserepov = {
@@ -110,6 +118,13 @@
       maxJobs = 4;          # tune per machine
       speedFactor = 2;
       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" ];
+    }
+    {
+      hostName = "arm-builder.ppclabz.net";
+      system = "aarch64-linux";
+      sshUser = "alextserepov";
+      maxJobs = 4;
+      supportedFeatures = [ "big-parallel" ];
     }
   ];
 
