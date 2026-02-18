@@ -30,6 +30,8 @@
     gnome-calendar
     wlogout
     networkmanagerapplet
+    chromium
+    gtk4.dev
   ];
 
   programs.bash = {
@@ -44,10 +46,37 @@
     EDITOR = "emacs";
   };
 
-  programs.bash.shellAliases = {
-    editor = "emacs -nw";
+  programs.bash = {
+    shellAliases = {
+      editor = "emacs -nw";
+    };
+    profileExtra = ''
+      if command -v systemctl >/dev/null; then
+      eval "$(systemctl --user show-environment | sed -n 's/^SSH_AUTH_SOCK=//p' | sed 's/^/export SSH_AUTH_SOCK=/')"
+    fi
+    '';
   };
 
+  programs.kitty = {
+    enable = true;
+
+    settings = {
+      scrollback_lines = 10000;
+    };
+
+    extraConfig = ''
+
+      map ctrl+shift+j scroll_line_down
+      map ctrl+shift+k scroll_line_up
+      map ctrl+shift+u scroll_page_up
+      map ctrl+shift+d scroll_page_down
+
+      map ctrl+shift+c copy_to_clipboard
+      map ctrl+shift+v paste_from_clipboard
+
+    '';
+  };
+  
   programs.git = {
     enable = true;
     settings = {
@@ -73,6 +102,12 @@
       (load-theme 'wheatgrass t)
     '';
   };
+
+  services.ssh-agent = {
+    enable = true;
+    enableBashIntegration = true;
+    socket = "ssh-agent";
+  };
   
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
@@ -81,7 +116,7 @@
 
   services.gnome-keyring = {
     enable = true;
-    components = [ "secrets" "ssh" "pkcs11" ];
+    components = [ "secrets" "pkcs11" ];
   };
 
   systemd.user.services.polkit-gnome-agent = {
@@ -97,6 +132,11 @@
     Install = {
       WantedBy = [ "graphical-session.target" ];
     };
+  };
+  systemd.user.services.ssh-agent.Service = {
+    ExecStartPost = [
+      ''${pkgs.systemd}/bin/systemctl --user set-environment SSH_AUTH_SOCK=%t/ssh-agent''
+    ];
   };
 
 }

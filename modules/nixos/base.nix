@@ -22,12 +22,13 @@
     settings = {
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
+      PermitRootLogin = "yes";
     };
   };
 
   # sensible defaults
   networking.firewall.enable = true;
+  services.openssh.openFirewall = true;
 
   environment.systemPackages = with pkgs; [
     git
