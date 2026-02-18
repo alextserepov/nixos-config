@@ -16,7 +16,7 @@ IP="$(hcloud server ip "$NAME")"
 echo
 echo "Waiting for rescue SSH (root@$IP)..."
 
-for i in {1..60}; do
+for _ in {1..60}; do
  if ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$IP" true; then
     echo "Rescue SSH is up."
     exit 0

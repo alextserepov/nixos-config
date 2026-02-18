@@ -103,7 +103,7 @@
           mkScript = { name, path, extraInputs ? [] }: pkgs.writeShellApplication {
             inherit name;
             runtimeInputs = baseInputs ++ extraInputs;
-            text = ''exec ${path} "$@"'';
+            text = builtins.readFile path;
           };
         in
         {
@@ -118,6 +118,7 @@
               self.packages.${system}.arm-builder-up
               self.packages.${system}.arm-builder-rescue
               self.packages.${system}.arm-builder-install
+              self.packages.${system}.arm-builder-trust
             ];
           };
           arm-builder-trust = mkScript { name = "arm-builder-trust"; path = ./scripts/hcloud/arm-builder-trust.sh; };

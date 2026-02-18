@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "${EUID:-$(id -u)}" -ne 0 ]]; then
+  exec sudo -E "$0" "$@"
+fi
+
 : "${HCLOUD_TOKEN:?Need HCLOUD_TOKEN set}"
 
 NAME="${HCLOUD_SERVER_NAME:-arm-builder}"
@@ -43,3 +47,5 @@ if ! wait_for_ssh "$IP"; then
 fi
 
 echo "SSH is up on $NAME."
+
+arm-builder-trust
