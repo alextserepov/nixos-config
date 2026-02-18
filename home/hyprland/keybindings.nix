@@ -3,7 +3,9 @@
     "$mod" = "Mod4"; # your wev said Mod4 for both Win + Command
 
     bind = [
-      "$mod SHIFT,L,exec,hyprlock"
+      "$mod,W,exec,hyprlock"
+      "$mod,G,exec,chromium --app=https://chat.openai.com"
+      "$mod,S,exec,slack"
       # --- launchers ---
       "$mod,Return,exec,kitty"
       "$mod,D,exec,wofi --show drun"
