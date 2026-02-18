@@ -95,5 +95,67 @@
           ];
         };
       };
+
+      packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          baseInputs = [ pkgs.bash pkgs.coreutils pkgs.hcloud pkgs.openssh pkgs.nix ];
+          mkScript = { name, path, extraInputs ? [] }: pkgs.writeShellApplication {
+            inherit name;
+            runtimeInputs = baseInputs ++ extraInputs;
+            text = ''exec ${path} "$@"'';
+          };
+        in
+        {
+          arm-builder-up = mkScript { name = "arm-builder-up"; path = ./scripts/hcloud/arm-builder-up.sh; };
+          arm-builder-down = mkScript { name = "arm-builder-down"; path = ./scripts/hcloud/arm-builder-down.sh; };
+          arm-builder-rescue = mkScript { name = "arm-builder-rescue"; path = ./scripts/hcloud/arm-builder-rescue.sh; };
+          arm-builder-install = mkScript { name = "arm-builder-install"; path = ./scripts/hcloud/arm-builder-install.sh; };
+          arm-builder-up-install = mkScript {
+            name = "arm-builder-up-install";
+            path = ./scripts/hcloud/arm-builder-up-install.sh;
+            extraInputs = [
+              self.packages.${system}.arm-builder-up
+              self.packages.${system}.arm-builder-rescue
+              self.packages.${system}.arm-builder-install
+            ];
+          };
+          arm-builder-deploy = mkScript { name = "arm-builder-deploy"; path = ./scripts/hcloud/arm-builder-deploy.sh; };
+
+          # Alias to match requested command name.
+          nix-builder-down = mkScript { name = "nix-builder-down"; path = ./scripts/hcloud/arm-builder-down.sh; };
+        }
+      );
+
+      apps = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system: {
+        arm-builder-up = {
+          type = "app";
+          program = "${self.packages.${system}.arm-builder-up}/bin/arm-builder-up";
+        };
+        arm-builder-down = {
+          type = "app";
+          program = "${self.packages.${system}.arm-builder-down}/bin/arm-builder-down";
+        };
+        arm-builder-rescue = {
+          type = "app";
+          program = "${self.packages.${system}.arm-builder-rescue}/bin/arm-builder-rescue";
+        };
+        arm-builder-install = {
+          type = "app";
+          program = "${self.packages.${system}.arm-builder-install}/bin/arm-builder-install";
+        };
+        arm-builder-up-install = {
+          type = "app";
+          program = "${self.packages.${system}.arm-builder-up-install}/bin/arm-builder-up-install";
+        };
+        arm-builder-deploy = {
+          type = "app";
+          program = "${self.packages.${system}.arm-builder-deploy}/bin/arm-builder-deploy";
+        };
+        nix-builder-down = {
+          type = "app";
+          program = "${self.packages.${system}.nix-builder-down}/bin/nix-builder-down";
+        };
+      });
     };
 }
