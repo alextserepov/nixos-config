@@ -122,7 +122,9 @@
     {
       hostName = "arm-builder.ppclabz.net";
       system = "aarch64-linux";
+      protocol = "ssh-ng";
       sshUser = "alextserepov";
+      sshKey = "/etc/nix/ssh/arm-builder";
       maxJobs = 4;
       supportedFeatures = [ "big-parallel" ];
     }
@@ -131,6 +133,9 @@
   nix.extraOptions = ''
     builders-use-substitutes = true
   '';
+
+  programs.ssh.knownHosts."arm-builder.ppclabz.net".publicKey =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIgCtqxegO4ZZrvATJULyGkjdX0QQJmXFFoc27bCe4Xg";
 
   services.pipewire = {
     enable = true;

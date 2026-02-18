@@ -7,6 +7,8 @@
 
   services.openssh.enable = true;
 
+  security.sudo.wheelNeedsPassword = false;
+
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -28,6 +30,8 @@
   nix.settings = {
     "max-jobs" = "auto";
     cores = 0;
+    trusted-users = [ "root" "alextserepov" ];
+    allowed-users = [ "root" "alextserepov" ];
   };
 
   # keep it lean

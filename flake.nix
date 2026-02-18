@@ -120,6 +120,7 @@
               self.packages.${system}.arm-builder-install
             ];
           };
+          arm-builder-trust = mkScript { name = "arm-builder-trust"; path = ./scripts/hcloud/arm-builder-trust.sh; };
           arm-builder-deploy = mkScript { name = "arm-builder-deploy"; path = ./scripts/hcloud/arm-builder-deploy.sh; };
 
           # Alias to match requested command name.
@@ -147,6 +148,10 @@
         arm-builder-up-install = {
           type = "app";
           program = "${self.packages.${system}.arm-builder-up-install}/bin/arm-builder-up-install";
+        };
+        arm-builder-trust = {
+          type = "app";
+          program = "${self.packages.${system}.arm-builder-trust}/bin/arm-builder-trust";
         };
         arm-builder-deploy = {
           type = "app";
