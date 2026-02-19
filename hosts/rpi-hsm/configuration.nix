@@ -15,6 +15,34 @@
 
   time.timeZone = "Europe/Helsinki";
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  hardware.enableRedistributableFirmware = true;
+  networking.wireless.enable = true;
+  networking.wireless.userControlled.enable = false;
+  networking.wireless.interfaces = [ "wlan0" ];
+  networking.wireless.extraConfig = "country=FI";
+  networking.wireless.secretsFile = config.sops.templates."wireless.conf".path;
+  networking.wireless.networks."DNA-WIFI-E4C4".pskRaw = "ext:psk_home";
+
+  sops = {
+    defaultSopsFile = ../../secrets/rpi-hsm.yaml;
+    age.keyFile = "/etc/sops/age/keys.txt";
+    secrets = {
+      wifi-psk = { };
+    };
+    templates."wireless.conf".content = ''
+      psk_home=${config.sops.placeholder."wifi-psk"}
+    '';
+  };
+
+  environment.etc."sops/age/keys.txt" = {
+    source =
+      let
+        envPath = builtins.getEnv "RPI_AGE_KEY_PATH";
+        keyPath = if envPath == "" then toString ../../secrets/rpi.agekey else envPath;
+      in
+      builtins.path { path = keyPath; };
+    mode = "0400";
+  };
 
   users.users.alextserepov = {
     isNormalUser = true;
@@ -39,6 +67,8 @@
     pcsclite
     pcsc-tools
     gnutls
+    sops
+    age
   ];
 
   services.pcscd.enable = true;

@@ -2,7 +2,11 @@
 {
   disko.devices = {
     disk.main = {
-      device = "/dev/sda";
+      device =
+        let
+          envDevice = builtins.getEnv "DISK_DEVICE";
+        in
+        if envDevice == "" then "/dev/sda" else envDevice;
       type = "disk";
       content = {
         type = "gpt";

@@ -37,6 +37,34 @@ if [[ -z "$IP" ]]; then
   exit 1
 fi
 
+detect_disk() {
+  local disks primary
+  disks="$(ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+    -o ConnectTimeout=5 -o BatchMode=yes -o IdentitiesOnly=yes -i "$SSH_IDENTITY" \
+    "root@${IP}" \
+    "lsblk -dn -o NAME,TYPE | awk '\$2==\"disk\"{print \$1}'")" || return 1
+  primary="$(printf '%s\n' "$disks" | awk '
+    $1=="nvme0n1" {print; found=1}
+    END {if (!found) print ""}' | head -n1)"
+  if [[ -z "$primary" ]]; then
+    primary="$(printf '%s\n' "$disks" | awk '
+      $1=="vda" {print; found=1}
+      END {if (!found) print ""}' | head -n1)"
+  fi
+  if [[ -z "$primary" ]]; then
+    primary="$(printf '%s\n' "$disks" | awk '
+      $1=="sda" {print; found=1}
+      END {if (!found) print ""}' | head -n1)"
+  fi
+  if [[ -z "$primary" ]]; then
+    primary="$(printf '%s\n' "$disks" | head -n1)"
+  fi
+  if [[ -z "$primary" ]]; then
+    return 1
+  fi
+  echo "/dev/${primary}"
+}
+
 if [[ "$(get_rescue_status)" != "true" ]]; then
   echo "Rescue not yet reported by API; probing via SSH..."
   if ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
@@ -52,8 +80,35 @@ fi
 
 echo "Installing to $NAME at $IP (rescue root login)..."
 
+if [[ -z "${DISK_DEVICE:-}" ]]; then
+  if DISK_DEVICE="$(detect_disk)"; then
+    export DISK_DEVICE
+    echo "Detected install disk: ${DISK_DEVICE}"
+  else
+    echo "Failed to detect install disk in rescue."
+    exit 1
+  fi
+else
+  echo "Using DISK_DEVICE=${DISK_DEVICE}"
+fi
+
+KEEP_RESCUE_ON_FAILURE="${KEEP_RESCUE_ON_FAILURE:-0}"
+RESCUE_CLEANED=0
+cleanup_rescue() {
+  if [[ "$RESCUE_CLEANED" -eq 1 ]]; then
+    return 0
+  fi
+  if [[ "$KEEP_RESCUE_ON_FAILURE" -eq 1 ]]; then
+    return 0
+  fi
+  hcloud server disable-rescue "$NAME" || true
+  hcloud server reboot "$NAME" || true
+  RESCUE_CLEANED=1
+}
+trap cleanup_rescue EXIT
+
 # Run from repo root:
-nix run github:nix-community/nixos-anywhere -- \
+if ! nix run github:nix-community/nixos-anywhere -- \
   --flake ".#arm-builder" \
   --build-on remote \
   --debug \
@@ -63,10 +118,13 @@ nix run github:nix-community/nixos-anywhere -- \
   --ssh-option "StrictHostKeyChecking=no" \
   --ssh-option "BatchMode=yes" \
   --ssh-option "ConnectionAttempts=20" \
-  "root@${IP}"
+  "root@${IP}"; then
+  echo "nixos-anywhere failed for $NAME. Rescue will be disabled unless KEEP_RESCUE_ON_FAILURE=1."
+  exit 1
+fi
 
-hcloud server disable-rescue "$NAME" || true
-hcloud server reboot "$NAME"
+cleanup_rescue
+trap - EXIT
 
 if ! wait_for_rescue_status "false"; then
   echo "Rescue did not disable within ${RESCUE_WAIT_SECONDS}s for $NAME."

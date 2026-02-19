@@ -8,6 +8,10 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
     pkcs11-proxy.url = "github:tiiuae/pkcs11-proxy";
     pkcs11-proxy.flake = false;
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -97,6 +101,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             ({ ... }: { nixpkgs.overlays = [ overlayPkcs11ProxyTii ]; })
+            inputs.sops-nix.nixosModules.sops
             nixos-hardware.nixosModules.raspberry-pi-4
             "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
             ./hosts/rpi-hsm/configuration.nix
