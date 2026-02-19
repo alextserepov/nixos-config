@@ -10,6 +10,7 @@ fi
 NAME="${HCLOUD_SERVER_NAME:-arm-builder}"
 SSH_WAIT_SECONDS="${SSH_WAIT_SECONDS:-240}"
 SSH_USER="${SSH_USER:-alextserepov}"
+RESCUE_WAIT_SECONDS="${RESCUE_WAIT_SECONDS:-120}"
 if [[ -n "${HCLOUD_SSH_IDENTITY:-}" ]]; then
   SSH_IDENTITY="$HCLOUD_SSH_IDENTITY"
 elif [[ "${EUID:-$(id -u)}" -eq 0 && -n "${SUDO_USER:-}" ]]; then
@@ -37,6 +38,20 @@ wait_for_ssh() {
 arm-builder-up
 arm-builder-rescue
 arm-builder-install
+
+if [[ "$(hcloud server describe "$NAME" -o format='{{.RescueEnabled}}')" == "true" ]]; then
+  echo "Rescue still enabled after install; disabling..."
+  hcloud server disable-rescue "$NAME" || true
+  hcloud server reboot "$NAME"
+  deadline=$((SECONDS + RESCUE_WAIT_SECONDS))
+  while [[ "$(hcloud server describe "$NAME" -o format='{{.RescueEnabled}}')" == "true" ]]; do
+    if (( SECONDS >= deadline )); then
+      echo "Rescue did not disable within ${RESCUE_WAIT_SECONDS}s for $NAME."
+      break
+    fi
+    sleep 2
+  done
+fi
 
 IP="$(hcloud server describe "$NAME" -o format='{{.PublicNet.IPv4.IP}}')"
 if [[ -z "$IP" ]]; then

@@ -56,11 +56,13 @@ echo "Installing to $NAME at $IP (rescue root login)..."
 nix run github:nix-community/nixos-anywhere -- \
   --flake ".#arm-builder" \
   --build-on remote \
+  --debug \
   -i "$SSH_IDENTITY" \
   --ssh-option "IdentitiesOnly=yes" \
   --ssh-option "UserKnownHostsFile=/dev/null" \
   --ssh-option "StrictHostKeyChecking=no" \
   --ssh-option "BatchMode=yes" \
+  --ssh-option "ConnectionAttempts=20" \
   "root@${IP}"
 
 hcloud server disable-rescue "$NAME" || true
