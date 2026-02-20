@@ -132,6 +132,19 @@
           arm-builder-trust = mkScript { name = "arm-builder-trust"; path = ./scripts/hcloud/arm-builder-trust.sh; };
           arm-builder-deploy = mkScript { name = "arm-builder-deploy"; path = ./scripts/hcloud/arm-builder-deploy.sh; };
 
+          ubuntu-arm-builder-up = mkScript { name = "ubuntu-arm-builder-up"; path = ./scripts/hcloud/ubuntu-arm-builder-up.sh; };
+          ubuntu-arm-builder-down = mkScript { name = "ubuntu-arm-builder-down"; path = ./scripts/hcloud/ubuntu-arm-builder-down.sh; };
+          ubuntu-arm-builder-setup = mkScript { name = "ubuntu-arm-builder-setup"; path = ./scripts/hcloud/ubuntu-arm-builder-setup.sh; };
+          ubuntu-arm-builder-up-setup = mkScript {
+            name = "ubuntu-arm-builder-up-setup";
+            path = ./scripts/hcloud/ubuntu-arm-builder-up-setup.sh;
+            extraInputs = [
+              self.packages.${system}.ubuntu-arm-builder-up
+              self.packages.${system}.ubuntu-arm-builder-setup
+            ];
+          };
+          ubuntu-arm-builder-trust = mkScript { name = "ubuntu-arm-builder-trust"; path = ./scripts/hcloud/ubuntu-arm-builder-trust.sh; };
+
           # Alias to match requested command name.
           nix-builder-down = mkScript { name = "nix-builder-down"; path = ./scripts/hcloud/arm-builder-down.sh; };
         }
@@ -165,6 +178,26 @@
         arm-builder-deploy = {
           type = "app";
           program = "${self.packages.${system}.arm-builder-deploy}/bin/arm-builder-deploy";
+        };
+        ubuntu-arm-builder-up = {
+          type = "app";
+          program = "${self.packages.${system}.ubuntu-arm-builder-up}/bin/ubuntu-arm-builder-up";
+        };
+        ubuntu-arm-builder-down = {
+          type = "app";
+          program = "${self.packages.${system}.ubuntu-arm-builder-down}/bin/ubuntu-arm-builder-down";
+        };
+        ubuntu-arm-builder-setup = {
+          type = "app";
+          program = "${self.packages.${system}.ubuntu-arm-builder-setup}/bin/ubuntu-arm-builder-setup";
+        };
+        ubuntu-arm-builder-up-setup = {
+          type = "app";
+          program = "${self.packages.${system}.ubuntu-arm-builder-up-setup}/bin/ubuntu-arm-builder-up-setup";
+        };
+        ubuntu-arm-builder-trust = {
+          type = "app";
+          program = "${self.packages.${system}.ubuntu-arm-builder-trust}/bin/ubuntu-arm-builder-trust";
         };
         nix-builder-down = {
           type = "app";
