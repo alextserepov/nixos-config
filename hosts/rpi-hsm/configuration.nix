@@ -3,11 +3,15 @@
 {
   networking.hostName = "rpi-hsm";
 
-  services.openssh.enable = true;
-  services.openssh.settings = {
-    PasswordAuthentication = false;
-    KbdInteractiveAuthentication = false;
-    PermitRootLogin = "no";
+  services.openssh = {
+    enable = true;
+    openFirewall = true;
+    
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "no";
+    };
   };
 
   boot.loader.grub.enable = false;
@@ -45,13 +49,26 @@
   services.pcscd.plugins = [ pkgs.ccid ];
 
 #  hardware.enableAllHardware = lib.mkForce false;
-#  boot.blacklistedKernelModules = [ "dw-hdmi" ];
-#  boot.initrd.includeDefaultModules = false;
-#  boot.initrd.kernelModules = lib.mkForce [ ];
+   boot.blacklistedKernelModules = lib.mkForce [ "dw-hdmi" ];
+   boot.initrd.includeDefaultModules = lib.mkForce false;
+   boot.initrd.kernelModules = lib.mkForce [ "dm_mod" ];
 #  boot.initrd.availableKernelModules = lib.mkForce [ ];
-#  boot.kernelModules = lib.mkForce [ ];
+   boot.kernelModules = lib.mkForce [ "dm_mod" ];
 
-  networking.firewall.allowedTCPPorts = [ 2345 ];
+  boot.initrd.availableKernelModules = lib.mkForce [
+    # SD/MMC for Pi 4 boot from SD
+    "mmc_block"
+    "sdhci"
+    "sdhci_iproc"
+    "sdhci_pltfm"
+    "bcm2835_mmc"
+
+    # filesystems for your partitions
+    "ext4"
+    "vfat"
+  ];
+
+  networking.firewall.allowedTCPPorts = [ 22 2345 ];
 
   systemd.tmpfiles.rules = [
     "d /var/lib/pkcs11-proxy 0750 pkcs11-proxy pkcs11-proxy - -"
@@ -87,5 +104,12 @@
       LockPersonality = true;
       MemoryDenyWriteExecute = true;
     };
+  };
+
+  networking.useNetworkd = true;
+  systemd.network.networks."10-wlan" = {
+    matchConfig.name = "wlan0";
+    networkConfig.DHCP = "yes";
+    dhcpV4Config.UseHostname = true;
   };
 }

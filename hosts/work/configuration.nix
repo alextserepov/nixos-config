@@ -54,6 +54,16 @@
     ACTION=="add|change", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c548", TEST=="power/control", ATTR{power/control}="on"
   '';
 
+  services.printing.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
+  hardware.printers = {
+    ensurePrinters = [];
+  };
 
 #  services.udev.extraRules = ''
 #    ACTION=="add", SUBSYSTEM=="usb", TEST=="power/control", ATTR{power/control}="on"
@@ -62,7 +72,7 @@
   programs.git.enable = true;
   users.users.alextserepov = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "lp" "scanner" ];
   };
 
   environment.systemPackages = with pkgs; [
