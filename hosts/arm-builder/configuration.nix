@@ -8,7 +8,9 @@
 
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Hetzner Cloud ARM UEFI often doesn't allow writing NVRAM variables;
+  # install systemd-boot to the fallback path (EFI/BOOT/BOOTAA64.EFI).
+  boot.loader.efi.canTouchEfiVariables = false;
   boot.loader.efi.efiSysMountPoint = "/boot";
 
   users.users.alextserepov = {

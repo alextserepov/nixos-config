@@ -1,8 +1,14 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, modulesPath, ... }:
 
 {
+  imports = [
+    (modulesPath + "/installer/sd-card/sd-image-raspberrypi.nix")
+  ];
   networking.hostName = "rpi-hsm";
 
+  boot.supportedFilesystems = lib.mkForce [ "ext4" "vfat" ];
+  services.zfs = lib.mkForce  { };
+  
   services.openssh.enable = true;
   services.openssh.settings = {
     PasswordAuthentication = false;
@@ -11,8 +17,9 @@
   };
 
   boot.loader.grub.enable = false;
-  boot.loader.generic-extlinux-compatible.enable = true;
 
+  boot.loader.generic-extlinux-compatible.enable = true;
+  
   time.timeZone = "Europe/Helsinki";
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   hardware.enableRedistributableFirmware = true;
@@ -76,10 +83,11 @@
 
   hardware.enableAllHardware = lib.mkForce false;
   boot.blacklistedKernelModules = [ "dw-hdmi" ];
-  boot.initrd.includeDefaultModules = false;
+  boot.initrd.includeDefaultModules = lib.mkForce true;
   boot.initrd.kernelModules = lib.mkForce [ ];
   boot.initrd.availableKernelModules = lib.mkForce [ ];
   boot.kernelModules = lib.mkForce [ ];
+  boot.kernelPackages = lib.mkForce pkgs.linuxPackages_latest;
 
   networking.firewall.allowedTCPPorts = [ 2345 ];
 
