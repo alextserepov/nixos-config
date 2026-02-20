@@ -44,12 +44,12 @@
   services.pcscd.enable = true;
   services.pcscd.plugins = [ pkgs.ccid ];
 
-  hardware.enableAllHardware = lib.mkForce false;
-  boot.blacklistedKernelModules = [ "dw-hdmi" ];
-  boot.initrd.includeDefaultModules = false;
-  boot.initrd.kernelModules = lib.mkForce [ ];
-  boot.initrd.availableKernelModules = lib.mkForce [ ];
-  boot.kernelModules = lib.mkForce [ ];
+#  hardware.enableAllHardware = lib.mkForce false;
+#  boot.blacklistedKernelModules = [ "dw-hdmi" ];
+#  boot.initrd.includeDefaultModules = false;
+#  boot.initrd.kernelModules = lib.mkForce [ ];
+#  boot.initrd.availableKernelModules = lib.mkForce [ ];
+#  boot.kernelModules = lib.mkForce [ ];
 
   networking.firewall.allowedTCPPorts = [ 2345 ];
 

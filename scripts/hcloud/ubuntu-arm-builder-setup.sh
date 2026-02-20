@@ -18,6 +18,8 @@ fi
 
 if [[ -n "${SSH_PUBLIC_KEY:-}" ]]; then
   PUBKEY="${SSH_PUBLIC_KEY}"
+elif [[ -f "/etc/nix/ssh/arm-builder.pub" ]]; then
+  PUBKEY="$(cat /etc/nix/ssh/arm-builder.pub)"
 elif [[ "${EUID:-$(id -u)}" -eq 0 && -n "${SUDO_USER:-}" && -f "/home/${SUDO_USER}/.ssh/id_ed25519.pub" ]]; then
   PUBKEY="$(cat "/home/${SUDO_USER}/.ssh/id_ed25519.pub")"
 elif [[ -f "$HOME/.ssh/id_ed25519.pub" ]]; then
@@ -99,6 +101,9 @@ if [[ -n "${BUILDER_USER}" && "${BUILDER_USER}" != "root" ]]; then
     chmod 0600 "/home/${BUILDER_USER}/.ssh/authorized_keys"
     chown -R "${BUILDER_USER}:${BUILDER_USER}" "/home/${BUILDER_USER}/.ssh"
   fi
+
+  echo "${BUILDER_USER} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${BUILDER_USER}"
+  chmod 0440 "/etc/sudoers.d/${BUILDER_USER}"
 fi
 
 if ! command -v nix >/dev/null; then

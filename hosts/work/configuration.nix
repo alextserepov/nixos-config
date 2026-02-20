@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   powerManagement.enable = true;
@@ -108,6 +108,31 @@
 
 
   nix.distributedBuilds = true;
+  nix.settings.secret-key-files =
+    lib.optionals (builtins.pathExists "/etc/nix/keys/arm-builder.secret") [
+      "/etc/nix/keys/arm-builder.secret"
+    ];
+  system.activationScripts.armBuilderSigningKey = {
+    text = ''
+      install -d -m 0700 /etc/nix/keys
+      if [ ! -f /etc/nix/keys/arm-builder.secret ]; then
+        ${pkgs.nix}/bin/nix-store --generate-binary-cache-key arm-builder \
+          /etc/nix/keys/arm-builder.secret \
+          /etc/nix/keys/arm-builder.pub
+        chmod 600 /etc/nix/keys/arm-builder.secret /etc/nix/keys/arm-builder.pub
+      fi
+    '';
+  };
+
+  system.activationScripts.armBuilderSshKey = {
+    text = ''
+      install -d -m 0700 /etc/nix/ssh
+      if [ ! -f /etc/nix/ssh/arm-builder ]; then
+        ssh-keygen -t ed25519 -N "" -f /etc/nix/ssh/arm-builder
+        chmod 600 /etc/nix/ssh/arm-builder /etc/nix/ssh/arm-builder.pub
+      fi
+    '';
+  };
 
   nix.buildMachines = [
     {
