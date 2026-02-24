@@ -32,6 +32,10 @@
     networkmanagerapplet
     chromium
     gtk4.dev
+    codex
+    qutebrowser
+    openssl
+    openfortivpn
   ];
 
   programs.bash = {

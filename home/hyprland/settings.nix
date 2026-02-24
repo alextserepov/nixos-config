@@ -21,8 +21,9 @@
     };
 
     input = {
-      kb_layout = "fi";
+      kb_layout = "fi,ru";
       kb_variant = "nodeadkeys";
+      kb_options = "grp:alt_shift_toggle";
       touchpad = {
         natural_scroll = true;
 	scroll_factor = 0.35;
