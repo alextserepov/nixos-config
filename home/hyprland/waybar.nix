@@ -60,9 +60,11 @@
         };
 
         "hyprland/workspaces" = {
-          format = "{icon}";
+          format = "{icon} {id}";
+	  persistent-workspaces = {"*" = [ 1 2 3 4 5 6 7 8 9 0 ];};
           format-icons = {
-            "default" = "";
+            "empty" = "";
+            "default" = "";
             "active" = "";
             "urgent" = "";
           };
@@ -96,18 +98,22 @@
 
       /* Workspaces: round buttons */
       #workspaces button {
-        background: transparent;
+        background: rgba(255, 255, 255, 0.18);
         border-radius: 999px;
         padding: 2px 8px;
         margin: 0 2px;
       }
 
-      #workspaces button.active {
-        background: rgba(255, 255, 255, 0.18);
+      #worksapces button.empty {
+	background: transparent;
       }
 
       #workspaces button.urgent {
         background: rgba(255, 80, 80, 0.35);
+      }
+
+      #workspaces button.active {
+        background: rgba(80, 200, 120, 0.35);
       }
 
       /* Window title should not stretch too much */

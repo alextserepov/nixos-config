@@ -6,6 +6,7 @@
       "$mod,W,exec,hyprlock"
       "$mod,G,exec,chromium --app=https://chat.openai.com"
       "$mod,S,exec,slack"
+      "$mod SHIFT,Q,exec,qutebrowser"
       # --- launchers ---
       "$mod,Return,exec,kitty"
       "$mod,D,exec,wofi --show drun"

@@ -36,7 +36,16 @@
     qutebrowser
     openssl
     openfortivpn
+    neomutt
+    pass
+    gnupg
   ];
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+  };
 
   programs.bash = {
     enable = true;
@@ -47,12 +56,12 @@
   };
 
   home.sessionVariables = {
-    EDITOR = "emacs";
+    EDITOR = "nvim";
   };
 
   programs.bash = {
     shellAliases = {
-      editor = "emacs -nw";
+      editor = "nvim";
     };
     profileExtra = ''
       if command -v systemctl >/dev/null; then
