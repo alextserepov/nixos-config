@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   programs.waybar = {
     enable = true;
@@ -14,13 +15,13 @@
 
         modules-left = [ "hyprland/workspaces" "hyprland/window" ];
         modules-center = [ "clock" ];
-        modules-right = [ "network" "bluetooth" "pulseaudio" "battery" "tray" ];
+        modules-right = [ "network" "bluetooth" "pulseaudio" "custom/bt-kbd" "custom/bt-mouse" "battery" "tray" ];
 
         clock = {
           format = "{:%a %d.%m  %H:%M}";
-	  tooltip-format = "{:%A %d %B %Y\n%H:%M:%S}";
-	  on-click = "gnome-calendar";
-	  on-click-right = "kitty -e cal -3";
+          tooltip-format = "{:%A %d %B %Y\n%H:%M:%S}";
+          on-click = "gnome-calendar";
+          on-click-right = "kitty -e cal -3";
         };
 
         network = {
@@ -50,23 +51,61 @@
           on-click-right = "pavucontrol";
         };
 
+        # Bluetooth keyboard battery via UPower (BlueZ).
+        # Your device paths look like:
+        #   /org/freedesktop/UPower/devices/keyboard_dev_XX_XX_...
+        "custom/bt-kbd" = {
+          interval = 60;
+          return-type = "json";
+          exec = ''
+            upower="${pkgs.upower}/bin/upower"
+            dev="$($upower -e | ${pkgs.gnugrep}/bin/grep -E '/org/freedesktop/UPower/devices/keyboard_dev_' | ${pkgs.coreutils}/bin/head -n1)"
+            if [ -z "$dev" ]; then
+              echo '{"text":"󰌌 --","tooltip":"No keyboard_dev_* found via UPower"}'
+              exit 0
+            fi
+            pct="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/percentage/ {print $2}' | ${pkgs.coreutils}/bin/tr -d ' ')"
+            model="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/model/ {print $2}' | ${pkgs.gnused}/bin/sed 's/"/\\\"/g')"
+            echo "{\"text\":\"󰌌 $pct\",\"tooltip\":\"$model\\n$dev\"}"
+          '';
+        };
+
+        # Bluetooth mouse battery via UPower (BlueZ).
+        # Your device paths look like:
+        #   /org/freedesktop/UPower/devices/mouse_dev_XX_XX_...
+        "custom/bt-mouse" = {
+          interval = 60;
+          return-type = "json";
+          exec = ''
+            upower="${pkgs.upower}/bin/upower"
+            dev="$($upower -e | ${pkgs.gnugrep}/bin/grep -E '/org/freedesktop/UPower/devices/mouse_dev_' | ${pkgs.coreutils}/bin/head -n1)"
+            if [ -z "$dev" ]; then
+              echo '{"text":"󰍽 --","tooltip":"No mouse_dev_* found via UPower"}'
+              exit 0
+            fi
+            pct="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/percentage/ {print $2}' | ${pkgs.coreutils}/bin/tr -d ' ')"
+            model="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/model/ {print $2}' | ${pkgs.gnused}/bin/sed 's/"/\\\"/g')"
+            echo "{\"text\":\"󰍽 $pct\",\"tooltip\":\"$model\\n$dev\"}"
+          '';
+        };
+
         battery = {
           format = "{icon} {capacity}%";
           format-charging = "󰂄 {capacity}%";
           format-plugged = "󰂄 {capacity}%";
           format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
           tooltip = true;
-          on-click = "kitty -e upower -i $(upower -e | grep BAT)";
+          on-click = "kitty -e ${pkgs.upower}/bin/upower -i $(${pkgs.upower}/bin/upower -e | ${pkgs.gnugrep}/bin/grep BAT)";
         };
 
         "hyprland/workspaces" = {
           format = "{icon} {id}";
-	  persistent-workspaces = {"*" = [ 1 2 3 4 5 6 7 8 9 0 ];};
+          persistent-workspaces = { "*" = [ 1 2 3 4 5 6 7 8 9 0 ]; };
           format-icons = {
-            "empty" = "";
-            "default" = "";
-            "active" = "";
-            "urgent" = "";
+            empty = "";
+            default = "";
+            active = "";
+            urgent = "";
           };
         };
       };
@@ -79,7 +118,7 @@
         font-family: "JetBrains Mono";
         font-size: 12px;
         min-height: 0;
-	color: rgba(255, 255, 255, 0.92);
+        color: rgba(255, 255, 255, 0.92);
       }
 
       window#waybar {
@@ -89,7 +128,7 @@
       }
 
       /* Make each module look like a pill instead of a box */
-      #workspaces, #clock, #network, #bluetooth, #pulseaudio, #battery, #tray, #window {
+      #workspaces, #clock, #network, #bluetooth, #pulseaudio, #custom-bt-kbd, #custom-bt-mouse, #battery, #tray, #window {
         background: rgba(255, 255, 255, 0.08);
         border-radius: 999px;
         padding: 4px 10px;
@@ -104,8 +143,8 @@
         margin: 0 2px;
       }
 
-      #worksapces button.empty {
-	background: transparent;
+      #workspaces button.empty {
+        background: transparent;
       }
 
       #workspaces button.urgent {

@@ -54,6 +54,8 @@
     ACTION=="add|change", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c548", TEST=="power/control", ATTR{power/control}="on"
   '';
 
+  services.upower.enable = true;
+
   services.printing.enable = true;
   services.avahi = {
     enable = true;
@@ -72,7 +74,7 @@
   programs.git.enable = true;
   users.users.alextserepov = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "lp" "scanner" ];
+    extraGroups = [ "wheel" "networkmanager" "lp" "scanner" "docker" ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -201,5 +203,20 @@
 
   # Yubikey stuff
   services.pcscd.enable = true;
+
+  # docker
+  virtualisation.docker = {
+    enable = true;
+    daemon.settings = {
+      experimental = true;
+      default-address-pools = [
+        {
+          base = "172.30.0.0/16";
+          size = 24;
+        }
+      ];
+    };
+  };
+
   
 }

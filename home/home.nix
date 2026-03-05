@@ -39,6 +39,7 @@
     neomutt
     pass
     gnupg
+    pinentry-gtk2
   ];
 
   programs.neovim = {
@@ -57,6 +58,7 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    PINENTRY_PROGRAM="$(command -v pinentry)";
   };
 
   programs.bash = {
