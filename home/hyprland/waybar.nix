@@ -1,4 +1,6 @@
-{ pkgs, ... }:
+
+{ config, pkgs, ... }:
+
 {
   programs.waybar = {
     enable = true;
@@ -7,158 +9,167 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 34;
-        margin-top = 8;
-        margin-left = 10;
-        margin-right = 10;
-        spacing = 8;
+        height = 24;
 
-        modules-left = [ "hyprland/workspaces" "hyprland/window" ];
+        modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
-        modules-right = [ "network" "bluetooth" "pulseaudio" "custom/bt-kbd" "custom/bt-mouse" "battery" "tray" ];
+        modules-right = [
+          "custom/bt-kbd"
+          "custom/bt-mouse"
+          "cpu"
+          "memory"
+          "temperature"
+          "pulseaudio"
+          "network"
+          "battery"
+          "tray"
+        ];
+
+        "hyprland/workspaces" = {
+          format = "{name}";
+        };
 
         clock = {
-          format = "{:%a %d.%m  %H:%M}";
-          tooltip-format = "{:%A %d %B %Y\n%H:%M:%S}";
-          on-click = "gnome-calendar";
-          on-click-right = "kitty -e cal -3";
+          format = "{:%a %H:%M}";
+        };
+
+        cpu = {
+          format = " {usage}%";
+        };
+
+        memory = {
+          format = "󰍛 {percentage}%";
+        };
+
+        temperature = {
+          format = " {temperatureC}°C";
         };
 
         network = {
-          format-wifi = " {signalStrength}%";
-          format-ethernet = "󰈁 {ifname}";
+          format-wifi = "";
+          format-ethernet = "󰈀";
           format-disconnected = "󰖪";
-          tooltip = true;
-          on-click = "kitty -e nmtui";
-          on-click-right = "nm-connection-editor";
-        };
-
-        bluetooth = {
-          format = "";
-          format-connected = " {num_connections}";
-          tooltip = true;
-          on-click = "blueman-manager";
         };
 
         pulseaudio = {
-          format = "{icon} {volume}%";
-          format-muted = "󰝟 muted";
-          format-icons = {
-            default = [ "󰕿" "󰖀" "󰕾" ];
-          };
-          scroll-step = 5;
-          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          on-click-right = "pavucontrol";
+          format = " {volume}%";
+          format-muted = "󰝟";
         };
 
-        # Bluetooth keyboard battery via UPower (BlueZ).
-        # Your device paths look like:
-        #   /org/freedesktop/UPower/devices/keyboard_dev_XX_XX_...
+        battery = {
+          format = "{capacity}% {icon}";
+          format-icons = [ "" "" "" "" "" ];
+        };
+
         "custom/bt-kbd" = {
           interval = 60;
           return-type = "json";
           exec = ''
             upower="${pkgs.upower}/bin/upower"
-            dev="$($upower -e | ${pkgs.gnugrep}/bin/grep -E '/org/freedesktop/UPower/devices/keyboard_dev_' | ${pkgs.coreutils}/bin/head -n1)"
+            dev="$($upower -e | ${pkgs.gnugrep}/bin/grep keyboard_dev_ | ${pkgs.coreutils}/bin/head -n1)"
             if [ -z "$dev" ]; then
-              echo '{"text":"󰌌 --","tooltip":"No keyboard_dev_* found via UPower"}'
+              echo '{"text":"󰌌 --"}'
               exit 0
             fi
             pct="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/percentage/ {print $2}' | ${pkgs.coreutils}/bin/tr -d ' ')"
-            model="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/model/ {print $2}' | ${pkgs.gnused}/bin/sed 's/"/\\\"/g')"
-            echo "{\"text\":\"󰌌 $pct\",\"tooltip\":\"$model\\n$dev\"}"
+            echo "{\"text\":\"󰌌 $pct\"}"
           '';
         };
 
-        # Bluetooth mouse battery via UPower (BlueZ).
-        # Your device paths look like:
-        #   /org/freedesktop/UPower/devices/mouse_dev_XX_XX_...
         "custom/bt-mouse" = {
           interval = 60;
           return-type = "json";
           exec = ''
             upower="${pkgs.upower}/bin/upower"
-            dev="$($upower -e | ${pkgs.gnugrep}/bin/grep -E '/org/freedesktop/UPower/devices/mouse_dev_' | ${pkgs.coreutils}/bin/head -n1)"
+            dev="$($upower -e | ${pkgs.gnugrep}/bin/grep mouse_dev_ | ${pkgs.coreutils}/bin/head -n1)"
             if [ -z "$dev" ]; then
-              echo '{"text":"󰍽 --","tooltip":"No mouse_dev_* found via UPower"}'
+              echo '{"text":"󰍽 --"}'
               exit 0
             fi
             pct="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/percentage/ {print $2}' | ${pkgs.coreutils}/bin/tr -d ' ')"
-            model="$($upower -i "$dev" | ${pkgs.gawk}/bin/awk -F': *' '/model/ {print $2}' | ${pkgs.gnused}/bin/sed 's/"/\\\"/g')"
-            echo "{\"text\":\"󰍽 $pct\",\"tooltip\":\"$model\\n$dev\"}"
+            echo "{\"text\":\"󰍽 $pct\"}"
           '';
-        };
-
-        battery = {
-          format = "{icon} {capacity}%";
-          format-charging = "󰂄 {capacity}%";
-          format-plugged = "󰂄 {capacity}%";
-          format-icons = [ "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-          tooltip = true;
-          on-click = "kitty -e ${pkgs.upower}/bin/upower -i $(${pkgs.upower}/bin/upower -e | ${pkgs.gnugrep}/bin/grep BAT)";
-        };
-
-        "hyprland/workspaces" = {
-          format = "{icon} {id}";
-          persistent-workspaces = { "*" = [ 1 2 3 4 5 6 7 8 9 0 ]; };
-          format-icons = {
-            empty = "";
-            default = "";
-            active = "";
-            urgent = "";
-          };
         };
       };
     };
 
     style = ''
       * {
-        border: none;
-        border-radius: 0;
-        font-family: "JetBrains Mono";
+        font-family: "JetBrainsMono Nerd Font", monospace;
         font-size: 12px;
+        border: none;
+        box-shadow: none;
         min-height: 0;
-        color: rgba(255, 255, 255, 0.92);
       }
 
-      window#waybar {
-        background: rgba(20, 20, 20, 0.35);
-        border-radius: 14px;
-        padding: 6px 10px;
+      /* bar */
+      #waybar {
+        background: rgba(30,30,30,0.90);
+        color: #e5e5e5;
       }
 
-      /* Make each module look like a pill instead of a box */
-      #workspaces, #clock, #network, #bluetooth, #pulseaudio, #custom-bt-kbd, #custom-bt-mouse, #battery, #tray, #window {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 999px;
-        padding: 4px 10px;
-        margin: 2px 4px;
-      }
-
-      /* Workspaces: round buttons */
-      #workspaces button {
-        background: rgba(255, 255, 255, 0.18);
-        border-radius: 999px;
-        padding: 2px 8px;
-        margin: 0 2px;
-      }
-
-      #workspaces button.empty {
+      /* kill any "pill" styling from previous CSS/theme */
+      #waybar .module,
+      #waybar .module > box,
+      #waybar label,
+      #waybar button,
+      #waybar image {
         background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        padding-top: 0;
+        padding-bottom: 0;
       }
 
-      #workspaces button.urgent {
-        background: rgba(255, 80, 80, 0.35);
+      /* flat blocks / segments */
+      #waybar .module {
+        padding: 0 10px;
+        margin: 0;
+        border-right: 1px solid rgba(255,255,255,0.08);
+      }
+
+      #waybar .module:last-child {
+        border-right: none;
+      }
+
+      /* workspaces */
+      #workspaces button {
+        padding: 0 6px;
+        margin: 0;
+        border-radius: 0;
+        background: transparent;
+        color: #ffffff;
       }
 
       #workspaces button.active {
-        background: rgba(80, 200, 120, 0.35);
+        background: rgba(58, 130, 246, 0.90);
+        color: #ffffff;
       }
 
-      /* Window title should not stretch too much */
-      #window {
-        padding-left: 12px;
-        padding-right: 12px;
+      /* explicitly override common modules (some themes target these IDs) */
+      #clock,
+      #custom-bt-kbd,
+      #custom-bt-mouse,
+      #pulseaudio,
+      #network,
+      #battery,
+      #tray,
+      #cpu,
+      #memory,
+      #temperature {
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      /* tray icons sometimes get a rounded background from GTK theme */
+      #tray > .passive,
+      #tray > .needs-attention,
+      #tray > widget,
+      #tray image {
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
       }
     '';
   };

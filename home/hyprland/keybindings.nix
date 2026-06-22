@@ -4,6 +4,7 @@
 
     bind = [
       "$mod,W,exec,hyprlock"
+      "$mod SHIFT, W,exec, swww img $(ls ~/Pictures/wallpapers/* | shuf -n1)"
       "$mod,G,exec,chromium --app=https://chat.openai.com"
       "$mod,S,exec,slack"
       "$mod SHIFT,Q,exec,qutebrowser"

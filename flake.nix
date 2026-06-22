@@ -102,6 +102,15 @@
             ./hosts/rpi-hsm/configuration.nix
           ];
         };
+        rpi4 = nixpkgs.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [
+            nixos-hardware.nixosModules.raspberry-pi-4
+            "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+            { nixpkgs.config.allowUnfree = true; }
+            ./hosts/rpi4/configuration.nix
+          ];
+        };
       };
 
       packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system:

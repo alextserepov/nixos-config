@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   wayland.windowManager.hyprland.settings = {
@@ -6,6 +6,8 @@
     exec-once = [
       "waybar"
       "mako"
+      "${pkgs.swww}/bin/swww-daemon"
+      "bash -c 'swww img $(ls ~/Pictures/wallpapers/* | shuf -n1)'"
     ];
 
     general = {
@@ -17,7 +19,11 @@
 
     decoration = {
       rounding = 8;
-      blur.enabled = true;
+      blur = {
+        enabled = true;
+        size = 8;
+        passes = 2;
+      };
     };
 
     input = {

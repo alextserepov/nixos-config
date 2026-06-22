@@ -3,6 +3,7 @@
 {
   home.username = "alextserepov";
   home.homeDirectory = "/home/alextserepov";
+  home.file."Pictures/wallpapers/.keep".text =  "";
 
   imports = [
     ./hyprland
@@ -40,6 +41,8 @@
     pass
     gnupg
     pinentry-gtk2
+    swww
+    alsa-utils
   ];
 
   programs.neovim = {
@@ -77,6 +80,7 @@
 
     settings = {
       scrollback_lines = 10000;
+#      background_opacity = 0.6;
     };
 
     extraConfig = ''

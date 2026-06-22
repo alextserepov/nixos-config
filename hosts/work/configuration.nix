@@ -3,7 +3,10 @@
 {
   powerManagement.enable = true;
   
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    trusted-users = [ "root" "alextserepov" ];
+  };
   nixpkgs.config.allowUnfree = true;
 
   boot.loader.systemd-boot.enable = true;
@@ -90,6 +93,8 @@
     hyprlock
     yubikey-manager
     pcsc-tools
+    orca-slicer
+    freecad
   ];
 
   services.keyd = {
@@ -146,26 +151,26 @@
     '';
   };
 
-  nix.buildMachines = [
-    {
-      hostName = "hetz.ppclabz.net";
-      system = "x86_64-linux";
-      protocol = "ssh-ng";
-      sshUser = "alextserepov";
-      maxJobs = 4;          # tune per machine
-      speedFactor = 2;
-      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" ];
-    }
-    {
-      hostName = "arm-builder.ppclabz.net";
-      system = "aarch64-linux";
-      protocol = "ssh-ng";
-      sshUser = "alextserepov";
-      sshKey = "/etc/nix/ssh/arm-builder";
-      maxJobs = 4;
-      supportedFeatures = [ "big-parallel" ];
-    }
-  ];
+#  nix.buildMachines = [
+#    {
+#      hostName = "hetz.ppclabz.net";
+#      system = "x86_64-linux";
+#      protocol = "ssh-ng";
+#      sshUser = "alextserepov";
+#      maxJobs = 4;          # tune per machine
+#      speedFactor = 2;
+#      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" ];
+#    }
+#    {
+#      hostName = "arm-builder.ppclabz.net";
+#      system = "aarch64-linux";
+#      protocol = "ssh-ng";
+#      sshUser = "alextserepov";
+#      sshKey = "/etc/nix/ssh/arm-builder";
+#      maxJobs = 4;
+#      supportedFeatures = [ "big-parallel" ];
+#    }
+#  ];
 
   nix.extraOptions = ''
     builders-use-substitutes = true
