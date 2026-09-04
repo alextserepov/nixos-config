@@ -80,6 +80,7 @@
 
     settings = {
       scrollback_lines = 10000;
+      font_size=14;
 #      background_opacity = 0.6;
     };
 

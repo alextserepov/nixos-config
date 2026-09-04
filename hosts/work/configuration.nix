@@ -95,6 +95,7 @@
     pcsc-tools
     orca-slicer
     freecad
+    vscode
   ];
 
   services.keyd = {
