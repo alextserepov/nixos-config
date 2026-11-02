@@ -7,6 +7,7 @@
 
   imports = [
     ./hyprland
+    ./sway
   ];
 
   home.stateVersion = "25.11";

@@ -111,6 +111,11 @@
   };
 
   programs.hyprland.enable = true;
+
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+  };
   
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true;
