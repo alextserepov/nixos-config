@@ -9,6 +9,7 @@
     grim
     slurp
     wl-clipboard
+    cosmic-term
   ];
 
   wayland.windowManager.hyprland.enable = true;

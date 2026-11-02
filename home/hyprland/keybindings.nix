@@ -9,7 +9,7 @@
       "$mod,S,exec,slack"
       "$mod SHIFT,Q,exec,qutebrowser"
       # --- launchers ---
-      "$mod,Return,exec,kitty"
+      "$mod,Return,exec,cosmic-term"
       "$mod,D,exec,wofi --show drun"
       "$mod,Escape,exec,wlogout" # optional; remove if you don't use wlogout
 

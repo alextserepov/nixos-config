@@ -76,7 +76,7 @@
   };
 
   programs.kitty = {
-    enable = true;
+    enable = false;
 
     settings = {
       scrollback_lines = 10000;
