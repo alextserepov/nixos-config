@@ -7,6 +7,8 @@
 
   imports = [
     ./hyprland
+    ./sway
+    ./theme.nix
   ];
 
   home.stateVersion = "25.11";
