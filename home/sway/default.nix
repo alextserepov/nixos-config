@@ -8,11 +8,24 @@
       modifier = "Mod4";
       terminal = "${pkgs.cosmic-term}/bin/cosmic-term";
 
+      startup = [
+        {
+	  command = "${pkgs.autotiling-rs}/bin/autotiling-rs";
+	  always = false;
+        }
+      ];
+
       keybindings = lib.mkOptionDefault {
       	"Mod4+q" = "kill";
 	"Mod4+w" = "exec ${pkgs.hyprlock}/bin/hyprlock";
 	"Mod4+space" = "layout toggle all";
-      };
+	"Mod4+Escape" = "exec ${pkgs.wlogout}/bin/wlogout";
+	# Print Screen → select area → copy screenshot to clipboard
+	"Print" = "exec ${pkgs.writeShellScript "sway-screenshot" ''
+	  ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - |
+	    ${pkgs.wl-clipboard}/bin/wl-copy --type image/png
+	''}";
+	};
 
       input."type:keyboard" = {
         xkb_layout = "fi,ru";
