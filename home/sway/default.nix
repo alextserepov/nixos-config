@@ -7,6 +7,7 @@
     config = {
       modifier = "Mod4";
       terminal = "${pkgs.cosmic-term}/bin/cosmic-term";
+      menu = "${pkgs.wofi}/bin/wofi --show drun";
 
       startup = [
         {

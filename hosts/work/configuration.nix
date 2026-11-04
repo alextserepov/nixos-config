@@ -121,7 +121,11 @@
   services.displayManager.gdm.wayland = true;
   
   xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+  xdg.portal.extraPortals = [
+    pkgs.xdg-desktop-portal-hyprland
+    pkgs.xdg-desktop-portal-wlr
+    pkgs.xdg-desktop-portal-gtk
+    ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
