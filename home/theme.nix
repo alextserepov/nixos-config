@@ -53,6 +53,8 @@ in
         workspaceButtons = true;
         workspaceNumbers = true;
 
+	statusCommand = "${pkgs.i3status}/bin/i3status";
+
         fonts = {
           names = [ "JetBrainsMono Nerd Font" ];
           size = 10.0;
