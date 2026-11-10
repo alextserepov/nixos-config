@@ -80,6 +80,12 @@
     extraGroups = [ "wheel" "networkmanager" "lp" "scanner" "docker" ];
   };
 
+  programs.thunar.enable = true;
+  programs.xfconf.enable = true;
+  services.gvfs.enable = true;
+  services.tumbler.enable = true;
+  services.udisks2.enable = true;
+
   environment.systemPackages = with pkgs; [
     emacs
     wget

@@ -49,7 +49,7 @@ in
     bars = [
       {
         position = "bottom";
-        trayOutput = "primary";
+        trayOutput = "*";
         workspaceButtons = true;
         workspaceNumbers = true;
 
