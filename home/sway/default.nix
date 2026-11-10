@@ -1,6 +1,17 @@
 { pkgs, lib, ... }:
 
 {
+  xdg.configFile."networkManager,dmenu/config.ini".text = ''
+    [dmenu]
+    dmenu_command = ${pkgs.wofi}/bin/wofi --insensitive
+    list_saved = True
+    highlight = True
+    prompt = Networks
+
+    [dmenu_passphrase]
+    obscure = True
+  '';
+
   wayland.windowManager.sway = {
     enable = true;
 
@@ -22,6 +33,8 @@
 	"Mod4+space" = "layout toggle all";
 	"Mod4+Escape" = "exec ${pkgs.wlogout}/bin/wlogout";
 	"Mod4+e" = "exec thunar";
+	"Mod4+n" = "exec ${pkgs.networkmanager_dmenu}/bin/networkmanager_dmenu";
+
 	# Print Screen → select area → copy screenshot to clipboard
 	"Print" = "exec ${pkgs.writeShellScript "sway-screenshot" ''
 	  ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - |
