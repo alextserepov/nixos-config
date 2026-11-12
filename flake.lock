@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "bindpeek": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789376298,
+        "narHash": "sha256-mzgo3qLYD/Ji9mWiyap/o2ooHATlwOpUz3OZI+jRnMk=",
+        "owner": "Maik-0000FF",
+        "repo": "bindpeek",
+        "rev": "59362177c27a61bfa16bb99fb9c82da8f370141d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Maik-0000FF",
+        "repo": "bindpeek",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -90,6 +110,7 @@
     },
     "root": {
       "inputs": {
+        "bindpeek": "bindpeek",
         "disko": "disko",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",

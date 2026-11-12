@@ -1,9 +1,9 @@
 { pkgs, lib, ... }:
 
 {
-  xdg.configFile."networkManager,dmenu/config.ini".text = ''
+  xdg.configFile."networkmanager-dmenu/config.ini".text = ''
     [dmenu]
-    dmenu_command = ${pkgs.wofi}/bin/wofi --insensitive
+    dmenu_command = ${pkgs.wofi}/bin/wofi --dmenu --insensitive
     list_saved = True
     highlight = True
     prompt = Networks
@@ -25,6 +25,10 @@
 	  command = "${pkgs.autotiling-rs}/bin/autotiling-rs";
 	  always = false;
         }
+	{
+          command = "bindpeek";
+	  always = false;
+	}
       ];
 
       keybindings = lib.mkOptionDefault {
