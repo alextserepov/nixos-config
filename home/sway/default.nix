@@ -12,13 +12,21 @@
     obscure = True
   '';
 
+  home.packages = with pkgs; [
+    cosmic-term
+    wofi
+    networkmanager_dmenu
+    hyprlock
+    wlogout
+  ];
+
   wayland.windowManager.sway = {
     enable = true;
 
     config = {
       modifier = "Mod4";
-      terminal = "${pkgs.cosmic-term}/bin/cosmic-term";
-      menu = "${pkgs.wofi}/bin/wofi --show drun";
+      terminal = "cosmic-term";
+      menu = "wofi --show drun";
 
       startup = [
         {
@@ -33,11 +41,11 @@
 
       keybindings = lib.mkOptionDefault {
       	"Mod4+q" = "kill";
-	"Mod4+w" = "exec ${pkgs.hyprlock}/bin/hyprlock";
+	"Mod4+w" = "exec hyprlock";
 	"Mod4+space" = "layout toggle all";
-	"Mod4+Escape" = "exec ${pkgs.wlogout}/bin/wlogout";
+	"Mod4+Escape" = "exec wlogout";
 	"Mod4+e" = "exec thunar";
-	"Mod4+n" = "exec ${pkgs.networkmanager_dmenu}/bin/networkmanager_dmenu";
+	"Mod4+n" = "exec networkmanager_dmenu";
 
 	# Print Screen → select area → copy screenshot to clipboard
 	"Print" = "exec ${pkgs.writeShellScript "sway-screenshot" ''
@@ -46,20 +54,20 @@
 	''}";
 	# Volume with on-screen feedback
 	"XF86AudioRaiseVolume" =
-	  "exec ${pkgs.swayosd}/bin/swayosd-client --output-volume raise --max-volume 100";
+	  "exec swayosd-client --output-volume raise --max-volume 100";
 
 	"XF86AudioLowerVolume" =
-	  "exec ${pkgs.swayosd}/bin/swayosd-client --output-volume lower";
+	  "exec swayosd-client --output-volume lower";
 
 	"XF86AudioMute" =
-	  "exec ${pkgs.swayosd}/bin/swayosd-client --output-volume mute-toggle";
+	  "exec swayosd-client --output-volume mute-toggle";
 
 	"XF86AudioMicMute" =
-	  "exec ${pkgs.swayosd}/bin/swayosd-client --input-volume mute-toggle";
+	  "exec swayosd-client --input-volume mute-toggle";
 
 	# Open full graphical audio controls
 	"Mod4+Shift+v" =
-	  "exec ${pkgs.pavucontrol}/bin/pavucontrol";
+	  "exec pavucontrol";
 	};
 
       input."type:keyboard" = {
@@ -76,7 +84,13 @@
   programs.i3status = {
     enable = true;
     enableDefault = false;
-    general.interval = 10;
+    general = {
+      interval = 10;
+      colors = true;
+      color_good = "#c4c4c4";
+      color_degraded = "#e5c07b";
+      color_bad = "#e06c75";
+    };
 
     modules = {
       "wireless _first_" = {
@@ -93,12 +107,16 @@
         settings = {
           format = "Battery: %percentage";
           format_percentage = "%.0f%s";
+	  threshold_type = "percentage";
+	  low_treshold = 20;
         };
       };
 
       "disk /" = {
         position = 3;
         settings.format = "Disk: %avail";
+	threshold_type = "gbytes_avail";
+	low_threshold = 100;
       };
 
       "tztime local" = {
