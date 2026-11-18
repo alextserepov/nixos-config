@@ -47,6 +47,14 @@
     alsa-utils
   ];
 
+  programs.qutebrowser = {
+    enable = true;
+    searchEngines = {
+      DEFAULT = "https://google.com{}";
+      nw = "https://nixos.org{}";
+    };
+  };
+
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -76,6 +84,16 @@
     fi
     '';
   };
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "inode/directory" = "thunar.desktop";
+    };
+  };
+
+  xdg.configFile."mimeapps.list".force = true;
+  xdg.dataFile."applications/mimeapps.list".force = true;
 
   programs.kitty = {
     enable = false;

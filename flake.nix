@@ -8,6 +8,10 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
     pkcs11-proxy.url = "github:tiiuae/pkcs11-proxy";
     pkcs11-proxy.flake = false;
+    bindpeek = {
+      url = "github:Maik-0000FF/bindpeek";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -27,7 +31,26 @@
             ./hosts/${hostname}/configuration.nix
             ]
             ++ nixpkgs.lib.optionals (builtins.pathExists hw) [ hw ]
-            ++ [
+            ++ nixpkgs.lib.optionals (hostname == "work") [
+              inputs.bindpeek.nixosModules.default
+
+              ({ ... }: {
+                programs.bindpeek = {
+                  enable = true;
+
+                  package =
+                  inputs.bindpeek.packages.${system}.default.overrideAttrs (old: {
+                    postPatch = (old.postPatch or "") + ''
+                      substituteInPlace src/LayerPlacement.cpp \
+                        --replace-fail \
+                        'window->setWantsToBeOnActiveScreen(true);' \
+                        'window->setScreenConfiguration(LayerShellQt::Window::ScreenFromCompositor);'
+                    '';
+                  });
+                 };
+               })
+            ]
+	    ++ [
             {
               nixpkgs.config = {
                 allowUnfree = true;
@@ -46,7 +69,7 @@
               };
             }
           ];
-        };
+    };
         overlayPkcs11ProxyTii = final: prev: {
           pkcs11-proxy-tii = prev.stdenv.mkDerivation {
             pname = "pkcs11-proxy";
