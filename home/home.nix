@@ -47,6 +47,14 @@
     alsa-utils
   ];
 
+  programs.qutebrowser = {
+    enable = true;
+    searchEngines = {
+      DEFAULT = "https://google.com{}";
+      nw = "https://nixos.org{}";
+    };
+  };
+
   programs.neovim = {
     enable = true;
     viAlias = true;

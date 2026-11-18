@@ -115,8 +115,8 @@
       "disk /" = {
         position = 3;
         settings.format = "Disk: %avail";
-	threshold_type = "gbytes_avail";
-	low_threshold = 100;
+#	threshold_type = "gbytes_avail";
+#	low_threshold = 100;
       };
 
       "tztime local" = {
